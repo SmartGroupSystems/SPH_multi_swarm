@@ -56,7 +56,7 @@ If everything is working correctly, you should see a visualization window simila
 
 3. **Interact with the simulation**:
    - Use the **2D Nav Goal** tool in the visualization editor
-   - Click on the white area to set a goal
+   - Click on the white area to set a goal point (Note: This goal point is only used to trigger particle movement, not as an actual navigation target)
    - If everything is configured correctly, you will observe particles moving and forming different groups
 
 The following images demonstrate the particle group formation process:
