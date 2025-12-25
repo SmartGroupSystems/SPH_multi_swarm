@@ -1,0 +1,69 @@
+<launch>
+   
+    <arg name="particleCount" value="100"/>      <!-- 粒子的数量,确保你的CPU核心足够多，不然多线程并行计算很容易失败-->
+    <arg name="groupCount" value="6"/>         <!-- 设置x个组 -->
+    <arg name="particleInterval" value="0.5"/>  <!-- 粒子之间的初始间距 -->
+    <arg name="particleVisScale" value="0.25"/> <!-- 粒子可视化尺寸 -->
+    <arg name="sphInitTime" value="5.0"/>       <!-- 初始化时间 -->
+    <arg name="init_bias_x" value="0.0"/>         <!-- 初始位置偏移量 -->
+    <arg name="init_bias_y" value="0.0"/>         <!-- 初始位置偏移量 -->
+    <arg name="updateInterval" value="0.02"/>   <!-- 时间步长，要与轨迹采样频率同步-->
+    <arg name="h" value="20.0"/>                <!-- kernel function radius -->
+    <arg name="mass" value="1.0"/>              <!-- default MASS -->
+    <arg name="threshold_dist" value="0.03"/>   <!-- 粒子与虚拟粒子的碰撞检测距离 -->
+    <arg name="k_den" value="1.0"/>           <!-- k_den -->
+    <arg name="k_rep" value="1.1"/>           <!-- k_rep -->
+    <arg name="k_fri" value="1.8"/>           <!-- k_fri -->
+    <arg name="k_p"   value="15.0"/>           <!-- k_p -->
+    <arg name="k_d"   value="6.5"/>           <!-- k_d -->
+    <arg name="k_ff"  value="1.0"/>           <!-- k_ffs -->
+    <arg name="k_force" value="1000.0"/>       <!-- k_force -->
+    <arg name="v_max" value="2.5"/>             <!-- v_max，必须大于规划速度-->
+    <arg name="a_max" value="3.5"/>             <!-- a_max，必须大于规划加速度 -->
+    <arg name="r_1"   value="0.06"/>            <!-- r_1 -->
+    <arg name="r_2"   value="0.2"/>             <!-- r_2 -->
+    <arg name="planv_max" value="1.2"/>             <!-- v_max -->
+    <arg name="plana_max" value="1.5"/>             <!-- a_max -->
+    <arg name="restDensity" value="1000000.0"/> <!-- \rho0 -->
+    <arg name="g" value="-9.8"/>                <!-- 重力,no use -->
+    <arg name="use_pctrl" value="true"/>        <!-- 使用位置\速度\加速度控制，默认使用位置控制 -->
+    <arg name="d_AA" value="8.0"/>              <!-- d_AA -->
+    <arg name="d_AB" value="12.0"/>              <!-- d_AB -->
+    <arg name="k_group_sep" value="-1.0"/>       <!-- k_group_sep -->
+    <arg name="use_random_sort" value="true"/>   <!-- 是否使用随机排序 -->
+    
+    <!-- Run the sph_particles node -->
+    <node name="sph_multi_swarm" pkg="water_swarm" type="sph_multi_swarm" output="screen">
+        <param name="sph/mass"              value="$(arg mass)"/> 
+        <param name="sph/restDensity"       value="$(arg restDensity)"/>
+        <param name="sph/h"                 value="$(arg h)"/> 
+        <param name="sph/g"                 value="$(arg g)"/>
+        <param name="sph/use_pctrl"         value="$(arg use_pctrl)"/>
+        <param name="sph/particleCount"     value="$(arg particleCount)"/> 
+        <param name="sph/particleInterval"  value="$(arg particleInterval)"/>
+        <param name="sph/updateInterval"    value="$(arg updateInterval)"/>
+        <param name="sph/particleVisScale"  value="$(arg particleVisScale)"/>
+        <param name="sph/threshold_dist"    value="$(arg threshold_dist)"/>
+        <param name="sph/k_den"             value="$(arg k_den)"/> 
+        <param name="sph/k_rep"             value="$(arg k_rep)"/> 
+        <param name="sph/k_fri"             value="$(arg k_fri)"/> 
+        <param name="sph/k_p"               value="$(arg k_p)"/> 
+        <param name="sph/k_d"               value="$(arg k_d)" />
+        <param name="sph/k_ff"              value="$(arg k_ff)" />
+        <param name="sph/v_max"             value="$(arg v_max)"/>
+        <param name="sph/a_max"             value="$(arg a_max)"/>
+        <param name="sph/r_1"               value="$(arg r_1)"/>
+        <param name="sph/r_2"               value="$(arg r_2)"/>
+        <param name="sph/state_enabled"     value="false"/>
+        <param name="sph/vis_role"          value="false"/>
+        <param name="sph/init_bias_x"       value="$(arg init_bias_x)"/>
+        <param name="sph/init_bias_y"       value="$(arg init_bias_y)"/>
+        <param name="sph/groupCount"        value="$(arg groupCount)"/>  
+        <param name="sph/d_AA"              value="$(arg d_AA)"/>
+        <param name="sph/d_AB"              value="$(arg d_AB)"/>
+        <param name="sph/k_group_sep"       value="$(arg k_group_sep)"/>
+        <param name="sph/use_random_sort"   value="$(arg use_random_sort)"/>
+    </node>    
+
+    <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find water_swarm)/config/swarm_rviz_3d.rviz" />
+</launch> 
